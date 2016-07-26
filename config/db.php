@@ -1,5 +1,5 @@
 <?php
-$host = env('MYSQL_HOST');
+$host = env('MYSQL_DOMAIN');
 $database = env('MYSQL_DATABASE');
 
 return [

@@ -1,2 +1,39 @@
-# yii2-amqp-service-kit
-Helpers kit for AMQP base daemon services
+HELPERS KIT FOR AMQP BASED DAEMON SERVICES
+------------------------------------------
+REQUIRED ENV VARIABLES
+```
+YII_ENV
+
+MYSQL_DOMAIN
+MYSQL_DATABASE
+MYSQL_WORKER_USER
+MYSQL_WORKER_PASSWORD
+
+RABBITMQ_DOMAIN
+RABBITMQ_WORKER_USER
+RABBITMQ_WORKER_PASSWORD
+RABBITMQ_NODE_PORT
+
+SLACK_MONITORING_ENDPOINT
+```
+
+##### NOT NECESSARY ENV VARIABLES
+---------------------------------
+```
+YII_DEBUG
+
+SLACK_MONITORING_DISABLED_OPTIONAL
+SLACK_MONITORING_CHANNEL_OPTIONAL
+SLACK_MONITORING_ICON_OPTIONAL
+```
+##### SERVICE EXAMPLE TEMPLATE
+---------------------------------
+```
+ROOT
+    /example
+```
+RUN
+------------
+~~~
+./vendor/bin/run
+~~~
