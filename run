@@ -1,0 +1,7 @@
+<?php
+require(__DIR__ . '/src/helpers/service-functions.php');
+
+defined('YII_DEBUG') or define('YII_DEBUG', (boolean)env('YII_DEBUG', true));
+defined('YII_ENV') or define('YII_ENV', env('YII_ENV'));
+
+require(__DIR__ . '/../../../yii'); //not good but much flexibility

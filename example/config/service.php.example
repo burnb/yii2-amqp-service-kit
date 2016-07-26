@@ -1,0 +1,15 @@
+<?php
+$http = env('WEB_APP_HTTP_OPTIONAL') ? 'http' : 'https';
+$params = require(__DIR__ . '/params.php');
+
+$config = [
+    'id'       => 'service',
+    'basePath' => dirname(__DIR__),
+    'aliases'  => [
+        'backendUrl' => $http . "://" . env('WEB_APP_ADMIN_DOMAIN'),
+        'apiUrl'     => $http . "://" . env('WEB_APP_API_DOMAIN')
+    ],
+    'params'   => $params
+];
+
+return $config;

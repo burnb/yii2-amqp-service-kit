@@ -1,0 +1,23 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Yii console bootstrap file.
+ *
+ * @link      http://www.yiiframework.com/
+ * @copyright Copyright (c) 2008 Yii Software LLC
+ * @license   http://www.yiiframework.com/license/
+ */
+
+require(__DIR__ . '/vendor/autoload.php');
+require(__DIR__ . '/vendor/burn/yii2-amqp-service-kit/src/components/Yii.php');
+
+$baseConfig = require(__DIR__ . '/vendor/burn/yii2-amqp-service-kit/config/service.php');
+$config = yii\helpers\ArrayHelper::merge(
+    $baseConfig,
+    require(__DIR__ . '/config/service.php')
+);
+
+$application = new yii\console\Application($config);
+$exitCode = $application->run();
+
+exit($exitCode);
