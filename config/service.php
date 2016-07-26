@@ -27,7 +27,7 @@ $config = [
                     'exportInterval' => 1
                 ],
                 [
-                    'class'          => 'app\components\SlackTarget',
+                    'class'          => 'burn\amqpServiceKit\log\targets\SlackTarget',
                     'enabled'        => !env('SLACK_MONITORING_DISABLED_OPTIONAL'),
                     'levels'         => ['error', 'warning'],
                     'exportInterval' => 1,

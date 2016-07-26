@@ -34,7 +34,7 @@ class SlackTarget extends Target
     public function init()
     {
         parent::init();
-        if (!$this->endpoint) {
+        if ($this->enabled && !$this->endpoint) {
             throw new \Exception("Slack log target endpoint can`t be empty");
         }
         $settings = ['username' => $this->username];
