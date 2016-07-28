@@ -24,7 +24,10 @@
   "autoload": {
     "psr-4": {
       "burn\\amqpServiceKit\\": "src"
-    }
+    },
+    "files": [
+      "src/helpers/service-functions.php"
+    ]
   },
   "bin": [
     "run"
