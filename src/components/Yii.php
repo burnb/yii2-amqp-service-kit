@@ -15,6 +15,21 @@ require(__DIR__ . '/../../../../yiisoft/yii2/BaseYii.php');
 class Yii extends \yii\BaseYii
 {
     /**
+     * Check db connection and if it down reopen
+     */
+    public static function pingDbConnection()
+    {
+        try {
+            if (self::$app->getDb()->pdo) {
+                self::$app->getDb()->pdo->query('SELECT 1');
+            }
+        } catch (\Exception $e) {
+            self::$app->getDb()->close();
+            self::$app->getDb()->open();
+        }
+    }
+
+    /**
      * Logs an error message.
      *
      * @param string $message  the message to be logged.

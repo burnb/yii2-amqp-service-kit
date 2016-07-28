@@ -89,6 +89,7 @@ class MainController extends ServiceController
         $this->channel->close();
         $this->connection->close();
         \Yii::$app->getDb()->close();
-        exit();
+
+        parent::finalize();
     }
 }

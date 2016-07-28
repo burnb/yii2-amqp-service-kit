@@ -128,6 +128,7 @@ class ServiceController extends Controller
         $this->channel->queue_bind($this->queueName, $this->exchangeName, $this->routingKey);
         $this->channel->basic_qos(NULL, 1, NULL);
         $this->channel->basic_consume($this->queueName, '', false, false, false, false, [$this, 'process']);
+        \Yii::w("SERVICE: {$this->serviceName} | UP");
     }
 
     /**
@@ -138,7 +139,7 @@ class ServiceController extends Controller
      */
     public function process($msg)
     {
-        self::pingDbConnection();
+        \Yii::pingDbConnection();
         printf("\r\nProcess: $msg->body");
         if (isset($msg->get_properties()['application_headers'])) {
             /** @var AMQPTable $headers */
@@ -155,21 +156,6 @@ class ServiceController extends Controller
         }
 
         return true;
-    }
-
-    /**
-     * Check db connection and if it down reopen
-     */
-    public static function pingDbConnection()
-    {
-        try {
-            if (\Yii::$app->getDb()->pdo) {
-                \Yii::$app->getDb()->pdo->query('SELECT 1');
-            }
-        } catch (\Exception $e) {
-            \Yii::$app->getDb()->close();
-            \Yii::$app->getDb()->open();
-        }
     }
 
     /**
