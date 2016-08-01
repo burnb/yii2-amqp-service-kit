@@ -61,18 +61,18 @@ class MainController extends ServiceController
                         return true;
                     } else {
                         $amqpChannel->basic_reject($msg->delivery_info['delivery_tag'], false);
-                        printf("\r\n" . __CLASS__ . " MESSAGE $msg->body REJECTED AND REQUEUE");
+                        $this->stderr("\r\n" . __CLASS__ . " MESSAGE $msg->body REJECTED AND REQUEUE");
                         \Yii::e("SERVICE: {$this->serviceName} | MESSAGE $msg->body REJECTED AND REQUEUE");
                     }
                 } else {
                     $amqpChannel->basic_ack($msg->delivery_info['delivery_tag']);
-                    printf("\r\n" . __CLASS__ . " ERROR! MESSAGE HAS NO someId");
+                    $this->stderr("\r\n" . __CLASS__ . " ERROR! MESSAGE HAS NO someId");
                     \Yii::e("SERVICE: {$this->serviceName} | ERROR! MESSAGE HAS NO someId");
                 }
             }
         } catch (\Exception $e) {
             $amqpChannel->basic_reject($msg->delivery_info['delivery_tag'], false);
-            printf("\r\nERROR: {$e->getMessage()} \r\nTRACE: {$e->getTraceAsString()} " . __CLASS__ . " MESSAGE $msg->body REJECTED AND REQUEUE");
+            $this->stderr("\r\nERROR: {$e->getMessage()} \r\nTRACE: {$e->getTraceAsString()} " . __CLASS__ . " MESSAGE $msg->body REJECTED AND REQUEUE");
             \Yii::ex($e, "SERVICE: {$this->serviceName}\r\nMESSAGE $msg->body REJECTED AND REQUEUE\r\n");
         } finally {
             $this->consumed++;

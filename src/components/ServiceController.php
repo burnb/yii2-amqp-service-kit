@@ -67,8 +67,8 @@ class ServiceController extends Controller
         $this->initPcntlSignalHandlers();
         $this->initAmqp();
         while (count($this->channel->callbacks)) {
-            printf("\r\n\033[1;31m MEMORY USAGE: " . memory_get_usage(true) / 1024 / 1024 . "Mb \033[m\r\n");
-            printf("Consumed: $this->consumed  \r\n");
+            $this->stdout("\r\n\033[1;31m MEMORY USAGE: " . memory_get_usage(true) / 1024 / 1024 . "Mb \033[m\r\n");
+            $this->stdout("Consumed: $this->consumed  \r\n");
             $this->channel->wait();
         }
     }
@@ -105,17 +105,17 @@ class ServiceController extends Controller
     {
         do {
             try {
-                printf("TRY CONNECT TO QUEUE...\r\n");
+                $this->stdout("TRY CONNECT TO QUEUE...\r\n");
                 $this->connection = new AMQPStreamConnection($this->rabbitIP, $this->rabbitPort, $this->rabbitUser, $this->rabbitPassword);
                 $again = false;
             } catch (\Exception $e) {
                 $sleepTime = self::SLEEP_BEFORE_RECONNECT_SECONDS;
-                printf("FAIL TO CONNECT. SLEEP $sleepTime SECONDS\r\n");
+                $this->stderr("FAIL TO CONNECT. SLEEP $sleepTime SECONDS\r\n");
                 sleep($sleepTime);
                 $again = true;
             }
         } while ($again);
-        printf("CONNECTED TO QUEUE\r\n");
+        $this->stdout("CONNECTED TO QUEUE\r\n");
         $this->channel = $this->connection->channel();
         $this->channel->exchange_declare($this->deadLetterExchangeName, 'direct', false, true, false);
         $this->channel->queue_declare($this->deadLetterQueueName, false, true, false, false, false);
@@ -140,7 +140,7 @@ class ServiceController extends Controller
     public function process($msg)
     {
         \Yii::pingDbConnection();
-        printf("\r\nProcess: $msg->body");
+        $this->stdout("\r\nProcess: $msg->body");
         if (isset($msg->get_properties()['application_headers'])) {
             /** @var AMQPTable $headers */
             $headers = $msg->get('application_headers');
@@ -148,7 +148,7 @@ class ServiceController extends Controller
             if ($count > self::MAX_ATTEMPT_COUNT) {
                 $msg->delivery_info['channel']->basic_publish($msg, $this->deadLetterExchangeName, $this->routingKey);
                 $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-                printf("\r\n" . __CLASS__ . " MAX ATTEMPT COUNT! MESSAGE $msg->body MOVED TO DEAD LETTER EXCHANGE");
+                $this->stderr("\r\n" . __CLASS__ . " MAX ATTEMPT COUNT! MESSAGE $msg->body MOVED TO DEAD LETTER EXCHANGE");
                 \Yii::e("SERVICE: {$this->serviceName} | MAX ATTEMPT COUNT! MESSAGE $msg->body MOVED TO DEAD LETTER EXCHANGE");
 
                 return false;
